@@ -1,0 +1,38 @@
+<h1>Nuevo carro</h1>
+
+<%= form_for @product do |f| %>
+  <p>
+    <%= f.label :tipo %><br>
+    <%= f.text_field :tipo %>
+  </p>
+ 
+  <p>
+    <%= f.label :marca %><br>
+    <%= f.text_field :marca %>
+  </p>
+
+  <p>
+    <%= f.label :modelo %><br>
+    <%= f.text_field :modelo %>
+  </p>
+  <p>
+    <%= f.label :linea %><br>
+    <%= f.text_field :linea %>
+  </p>
+  <p>
+    <%= f.label :capacidad %><br>
+    <%= f.text_field :capacidad %>
+  </p>
+  <p>
+    <%= f.label :cc %><br>
+    <%= f.text_field :cc %>
+  </p>
+  <p>
+    <%= f.label :color %><br>
+    <%= f.text_field :color %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

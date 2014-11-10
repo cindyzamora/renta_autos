@@ -1,0 +1,25 @@
+<h1>Carros</h1>
+ 
+<table>
+  <tr>
+    <th>Tipo</th>
+    <th>Marca</th>
+    <th>Modelo</th>
+    <th>linea</th>
+    <th>capacidad</th>
+    <th>cc</th>
+    <th>color</th>
+  </tr>
+ 
+  <% @products.each do |product| %>
+    <tr>
+      <td><%= product.tipo %></td>
+      <td><%= product.marca %></td>
+      <td><%= product.modelo %></td>
+      <td><%= product.linea %></td>
+      <td><%= product.capacidad %></td>
+      <td><%= product.cc %></td>
+      <td><%= product.color %></td>
+    </tr>
+  <% end %>
+</table>
