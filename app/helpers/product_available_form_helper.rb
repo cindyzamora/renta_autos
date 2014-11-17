@@ -1,0 +1,2 @@
+module ProductAvailableFormHelper
+end

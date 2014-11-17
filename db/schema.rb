@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141110034459) do
+ActiveRecord::Schema.define(version: 20141116115408) do
+
+  create_table "agencies", force: true do |t|
+    t.string   "codigo"
+    t.string   "nombre"
+    t.integer  "endpoint"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "product_available_forms", force: true do |t|
+    t.string   "nombre"
+    t.string   "tipo"
+    t.boolean  "requerido"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "products", force: true do |t|
     t.string   "tipo"
@@ -23,6 +39,24 @@ ActiveRecord::Schema.define(version: 20141110034459) do
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "cantidad"
   end
+
+  create_table "reserves", force: true do |t|
+    t.integer  "agency_id"
+    t.string   "productos"
+    t.decimal  "monto",        precision: 5, scale: 2, default: 0.0
+    t.date     "fecha_inicio"
+    t.date     "fecha_fin"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+    t.string   "nombre"
+    t.string   "dpi"
+    t.string   "telefono"
+    t.string   "no_tarjeta"
+  end
+
+  add_index "reserves", ["agency_id"], name: "index_reserves_on_agency_id"
 
 end

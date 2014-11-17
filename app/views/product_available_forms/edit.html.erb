@@ -1,0 +1,35 @@
+<h1>Edit form field</h1>
+ 
+<%= form_for :product_available_form, url: product_available_form_path(@product_field), method: :patch do |f| %>
+  <% if @product_field.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@product_field.errors.count, "error") %> prohibited
+      this field from being saved:</h2>
+    <ul>
+    <% @product_field.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+  <p>
+    <%= f.label :nombre  %><br>
+    <%= f.text_field :nombre, :value => @product_field.nombre %>
+  </p>
+  <p>
+    <%= f.label :tipo %><br>
+    <%= f.text_field :tipo, :value => @product_field.tipo %>
+  </p>
+ 
+  <p>
+    <%= f.label :requerido %><br>
+    <%= f.select :requerido, options_for_select([['True', true], ['False', false]], false) %>
+    <!-- <%= options_for_select([['True', true], ['False', false]], false) %> -->
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+ 
+<%= link_to 'Back', product_available_form_path %>

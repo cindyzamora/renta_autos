@@ -1,7 +1,17 @@
 Rails.application.routes.draw do
   get 'hello_world/index'
 
-  resources :products
+  resources :products do
+    post 'search', on: :collection, to: 'products#search', defaults: { format: 'json' }
+    get 'available/form', on: :collection, to: 'product_available_forms#form', defaults: { format: 'json' }
+  end
+
+  resources :product_available_forms
+  resources :reserves
+
+
+
+  # get 'photos/:id', to: 'photos#show', defaults: { format: 'jpg' }
   # post "products/new"
 
   root 'hello_world#index'

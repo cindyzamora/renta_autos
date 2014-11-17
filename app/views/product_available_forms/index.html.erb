@@ -1,0 +1,17 @@
+<h1>Carros</h1>
+ 
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Tipo</th>
+    <th>Requerido</th>
+  </tr>
+ 
+  <% @product_fields.each do |field| %>
+    <tr>
+      <td><%= field.nombre %></td>
+      <td><%= field.tipo %></td>
+      <td><%= field.requerido %></td>
+    </tr>
+  <% end %>
+</table>

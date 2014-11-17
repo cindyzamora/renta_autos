@@ -1,0 +1,22 @@
+<h1>Nuevo campo products available form</h1>
+
+<%= form_for @product_field do |f| %>
+  <p>
+    <%= f.label :nombre %><br>
+    <%= f.text_field :nombre %>
+  </p>
+ 
+  <p>
+    <%= f.label :tipo %><br>
+    <%= f.text_field :tipo %>
+  </p>
+
+  <p>
+    <%= f.label :requerido %><br>
+    <%= f.select :requerido, ['true', 'false'] %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
