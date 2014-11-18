@@ -11,15 +11,77 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141116115408) do
+ActiveRecord::Schema.define(version: 20141118115103) do
+
+  create_table "accounts", force: true do |t|
+    t.integer  "agency_id"
+    t.integer  "account"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "bank_id"
+  end
+
+  add_index "accounts", ["agency_id"], name: "index_accounts_on_agency_id"
+  add_index "accounts", ["bank_id"], name: "index_accounts_on_bank_id"
+
+  create_table "active_admin_comments", force: true do |t|
+    t.string   "namespace"
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
+  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace"
+  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+
+  create_table "admin_users", force: true do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true
+  add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
 
   create_table "agencies", force: true do |t|
     t.string   "codigo"
     t.string   "nombre"
-    t.integer  "endpoint"
+    t.string   "endpoint"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "banks", force: true do |t|
+    t.string   "nombre"
+    t.string   "code"
+    t.string   "endpoint"
+    t.string   "string"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "carritos_accounts", force: true do |t|
+    t.integer  "bank_id"
+    t.integer  "account"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "carritos_accounts", ["bank_id"], name: "index_carritos_accounts_on_bank_id"
 
   create_table "product_available_forms", force: true do |t|
     t.string   "nombre"
@@ -40,21 +102,23 @@ ActiveRecord::Schema.define(version: 20141116115408) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "cantidad"
+    t.decimal  "price",      precision: 5, scale: 2, default: 0.0
   end
 
   create_table "reserves", force: true do |t|
     t.integer  "agency_id"
     t.string   "productos"
-    t.decimal  "monto",        precision: 5, scale: 2, default: 0.0
+    t.decimal  "monto_total",      precision: 5, scale: 2, default: 0.0
     t.date     "fecha_inicio"
     t.date     "fecha_fin"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
-    t.string   "nombre"
-    t.string   "dpi"
-    t.string   "telefono"
-    t.string   "no_tarjeta"
+    t.string   "cliente_nombre"
+    t.string   "cliente_dpi"
+    t.string   "cliente_telefono"
+    t.string   "cliente_tarjeta"
+    t.string   "codigo"
   end
 
   add_index "reserves", ["agency_id"], name: "index_reserves_on_agency_id"

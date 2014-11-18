@@ -69,7 +69,7 @@ private
   end
 
   def filtering_params(params)
-    params.slice(:tipo, :marca, :modelo, :linea, :capacidad, :cc, :color)
+    params.slice(:id, :tipo, :marca, :modelo, :linea, :capacidad, :cc, :color)
   end
 
 end
