@@ -48,44 +48,23 @@ class ProductAvailableFormsController < ApplicationController
   	@r = []
 
   	@product_fields.each do |field|
-  		puts '---------------------'
-  		puts field.inspect
-  		puts field.attributes
-  		# @product_fields.to_hash
-  		# puts @product_fields.inspect
 
   		fields = Product.select("#{field.nombre}").distinct
-  		puts '******************* response'
 
-  		puts fields.inspect
   		response = field.attributes
-  		puts response.inspect
 
   		values = []
   		fields.each do |f|
-  			
-  			puts ';;;;;;'
-  			temp = f.attributes["#{field.nombre}"]
-  			puts f.attributes
-  			puts field.nombre
-  			puts '======='
-  			puts temp
-  			value = {"name" => temp}
+  			value_field = f.attributes["#{field.nombre}"]
+  			value = {"name" => value_field}
   			values.push(value)
   		end
 
-
   		response["values"] = values
-
-  		puts '.........................................'
-  		puts fields.inspect
-  		puts response.inspect
 
   		@r.push(response)
   	end
-  		puts @r.inspect
 
-  	
     render json: @r
   end
 

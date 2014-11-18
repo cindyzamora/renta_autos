@@ -1,0 +1,53 @@
+<h1>Edit Products</h1>
+ 
+<%= form_for :product, url: product_path(@product), method: :patch do |f| %>
+  <% if @product.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@product.errors.count, "error") %> prohibited
+      this field from being saved:</h2>
+    <ul>
+    <% @product.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+  <p>
+    <%= f.label :tipo  %><br>
+    <%= f.text_field :tipo, :value => @product.tipo %>
+  </p>
+  <p>
+    <%= f.label :marca %><br>
+    <%= f.text_field :marca, :value => @product.marca %>
+  </p>
+  <p>
+    <%= f.label :modelo %><br>
+    <%= f.text_field :modelo, :value => @product.modelo %>
+  </p>
+  <p>
+    <%= f.label :linea %><br>
+    <%= f.text_field :linea, :value => @product.linea %>
+  </p>
+  <p>
+    <%= f.label :capacidad %><br>
+    <%= f.text_field :capacidad, :value => @product.capacidad %>
+  </p>
+  <p>
+    <%= f.label :cc %><br>
+    <%= f.text_field :cc, :value => @product.cc %>
+  </p>
+  <p>
+    <%= f.label :color %><br>
+    <%= f.text_field :color, :value => @product.color %>
+  </p>
+  <p>
+    <%= f.label :cantidad %><br>
+    <%= f.text_field :cantidad, :value => @product.cantidad %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+ 
+<%= link_to 'Back', product_path %>

@@ -3,7 +3,7 @@ require 'json'
 class ProductsController < ApplicationController
   respond_to :to_json
   def index
-    @products = Product.all
+    @products = Product.select("id, tipo, marca, modelo, linea, capacidad, cc, color, cantidad")
     # respond_to do |format|
     #   format.html # index.html.erb
     #   format.json  { render :json => @products.to_json }
@@ -30,6 +30,20 @@ class ProductsController < ApplicationController
     end
   end
 
+  def edit
+    @product = Product.find(params[:id])
+  end
+
+  def update
+    @product = Product.find(params[:id])
+   
+    if @product.update(product_params)
+      redirect_to @product
+    else
+      render 'edit'
+    end
+  end
+
   def search
     # @params = params[:product]
     # @product = Product.find(params[:product])
@@ -51,7 +65,7 @@ class ProductsController < ApplicationController
  
 private
   def product_params
-    params.require(:product).permit(:tipo, :marca, :modelo, :linea, :capacidad, :cc, :color)
+    params.require(:product).permit(:tipo, :marca, :modelo, :linea, :capacidad, :cc, :color, :cantidad)
   end
 
   def filtering_params(params)

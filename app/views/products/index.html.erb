@@ -9,6 +9,7 @@
     <th>capacidad</th>
     <th>cc</th>
     <th>color</th>
+    <th>cantidad</th>
   </tr>
  
   <% @products.each do |product| %>
@@ -20,6 +21,7 @@
       <td><%= product.capacidad %></td>
       <td><%= product.cc %></td>
       <td><%= product.color %></td>
+      <td><%= product.cantidad %></td>
     </tr>
   <% end %>
 </table>
