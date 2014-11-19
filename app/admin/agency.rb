@@ -4,7 +4,7 @@ ActiveAdmin.register Agency do
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  permit_params :codigo, :nombre, :endpoint
+  permit_params :codigo, :nombre, :cuenta, :comision, :endpoint
   #
   # or
   #

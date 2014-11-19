@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118115103) do
+ActiveRecord::Schema.define(version: 20141119011605) do
 
   create_table "accounts", force: true do |t|
     t.integer  "agency_id"
@@ -63,6 +63,8 @@ ActiveRecord::Schema.define(version: 20141118115103) do
     t.string   "endpoint"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "cuenta"
+    t.integer  "comision"
   end
 
   create_table "banks", force: true do |t|
@@ -119,6 +121,7 @@ ActiveRecord::Schema.define(version: 20141118115103) do
     t.string   "cliente_telefono"
     t.string   "cliente_tarjeta"
     t.string   "codigo"
+    t.text     "raw_response"
   end
 
   add_index "reserves", ["agency_id"], name: "index_reserves_on_agency_id"

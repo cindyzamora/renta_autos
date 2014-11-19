@@ -1,3 +1,3 @@
 ActiveAdmin.register CarritosAccount do
-  permit_params :bank, :account
+  permit_params :bank_id, :account
 end

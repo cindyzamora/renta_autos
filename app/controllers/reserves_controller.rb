@@ -3,8 +3,8 @@ require 'json'
 class ReservesController < ApplicationController
 	respond_to :to_json
 
-  attr_accessor :endpoint
-
+  attr_accessor :agencia_cuenta
+  # attr_accessor :response
   def index
     @reserves = Reserve.all
     render json: @reserves
@@ -20,8 +20,6 @@ class ReservesController < ApplicationController
   end
  
   def create
-    # @reserve = Reserve.new(params)
-    # params.to_json
 
     information = request.raw_post
     data_parsed = JSON.parse(information)
@@ -29,7 +27,7 @@ class ReservesController < ApplicationController
     reserve = {}
     response = {}
 
-    @agency = Agency.find_by(codigo: data_parsed["agencia_codigo"])
+    @agency = Agency.find_by(codigo: data_parsed["codigo_agencia"])
     puts @agency.inspect
 
 
@@ -70,34 +68,101 @@ class ReservesController < ApplicationController
     @reserve = Reserve.find_by(codigo: data_parsed["codigo_reserva"])
     reserve = {}
     response = {}
+    @agencia_cuenta = data_parsed["agencia_cuenta"]
+
+    reserve["status"] = data_parsed["status"]
+    reserve["cliente_nombre"] = data_parsed["cliente_nombre"]
+    reserve["cliente_tarjeta"] = data_parsed["cliente_tarjeta"]
+    reserve["cliente_dpi"] = data_parsed["cliente_dpi"] 
+    reserve["cliente_telefono"] = data_parsed["cliente_telefono"]
+    reserve["monto_total"] = data_parsed["monto_total"]
+    reserve["codigo"] = data_parsed["codigo_reserva"]
+    # reserve["agencia_codigo"] = data_parsed["agencia_codigo"]
+    # reserve["agencia_cuenta"] = data_parsed["agencia_cuenta"]
 
     unless @reserve.nil?
 
-      if @reserve.status == 'activa'
-        reserve["status"] = data_parsed["status"]
-        reserve["cliente_nombre"] = data_parsed["cliente_nombre"]
-        reserve["cliente_tarjeta"] = data_parsed["cliente_tarjeta"]
-        reserve["cliente_dpi"] = data_parsed["cliente_dpi"] 
-        reserve["cliente_telefono"] = data_parsed["cliente_dpi"]
-        reserve["monto_total"] = data_parsed["monto_total"]
+      if @reserve.status == 'activa' &&  (data_parsed["status"] == 'cancelada' || data_parsed["status"] == 'confirmada')
+        response = confirm_cancel_reserve(reserve)
 
-
-        if @reserve.update(reserve)
-            response = {:code => '200', :codigo_reserva => data_parsed["codigo_reserva"], :status => data_parsed["status"]}
-        else
-          response = {:code => '422', :status => 'error', :message => 'Hubo un problema con la reservacion, por favor intente de nuevo.'}
-        end
-
+      # elsif @reserve.status == 'confirmada' &&  data_parsed["status"] == 'cancelada'
+      #   response = confirm_cancel_reserve(reserve)
       else
         response = {:code => '422', :status => 'error', :message => "Accion Invalidad, Reserva #{@reserve.status}."}
-
       end
     else
       response = {:code => '422', :status => 'error', :message => 'No existe esta reservacion.'}
     end
 
-      render json: response
+    render json: response
     
+  end
+
+  def confirm_cancel_reserve reserve
+    @reserve = Reserve.find_by(codigo: reserve["codigo"])
+    @agency = Agency.find(@reserve['agency_id'])
+    @carritos_account = CarritosAccount.first
+
+    monto_total = reserve["monto_total"]
+    ganacia = 100 - @agency["comision"].to_i
+    agencia_monto = (monto_total * @agency["comision"]) / 100
+    proveedor_monto = (monto_total * ganacia) / 100
+
+    unless reserve['status'] == "cancelada"
+
+      payment = {}
+      payment["codigo_reservacion"] = reserve["codigo"]
+      payment["cliente_nombre"] = reserve["cliente_nombre"]
+      payment["cliente_tarjeta"] = reserve["cliente_tarjeta"]
+      payment["cliente_dpi"] = reserve["cliente_dpi"] 
+      payment["cliente_telefono"] = reserve["cliente_dpi"]
+      payment["agencia_cuenta"] = @agencia_cuenta
+      payment["proveedor_cuenta"] = @carritos_account["account"]
+      payment["cliente_monto"] = reserve["monto_total"]
+      payment["proveedor_monto"] = proveedor_monto
+      payment["agencia_monto"] = agencia_monto
+
+
+      result = post_payment payment
+      if result.code == 200
+        reserve["raw_response"] = result.body
+        puts '*************************************'
+        puts reserve["raw_response"]
+        puts result.body.to_json
+        # puts result.body.to_json["mensaje"]
+
+        if @reserve.update(reserve)
+          response = result.body
+        else
+          response = {:code => '422', :status => 'error', :message => 'Hubo un problema con la reservacion, por favor intente de nuevo.'}
+        end
+      else
+        response = {:code => '422', :status => 'error', :message => 'Ocurrio un problema en la transaccion.'}
+      end
+
+    else
+      if @reserve.update(reserve)
+          response = {:code => '200', :status => 'cancelada', :message => 'Reservacion cancelada exitosamente.'}
+        else
+          response = {:code => '422', :status => 'error', :message => 'Hubo un problema con la reservacion, por favor intente de nuevo.'}
+        end
+    end
+
+    response
+  end
+
+  def post_payment payment
+    # @banks = Bank.all
+
+    puts payment
+    # puts @banks.inspect
+
+    # @banks.each do |k, v|
+    #   puts v
+    #   puts v["endpoint"]
+      # response = HTTParty.post('http://172.20.10.6/proyecto/servicios/solicitud_cobro.php', :body => payment) #anibal
+      response = HTTParty.post('http://172.20.10.5/proyectocc6/cobro_agencia.php', :body => payment) #godines
+    # end
   end
 
  
